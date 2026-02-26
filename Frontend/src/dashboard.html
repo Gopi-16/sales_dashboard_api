@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=q, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+body {
+    margin: 0;
+    padding: 40px;
+    background-color: #f4f6f9;
+}
+</style>
+</head>
+<body>
+    <button onClick="health()">Connection Check</button>
+    <p id="status" style="color: green;"></p>
+    <script src="../utils/health_check.js">
+    </script>
+    <h2> Sales over time </h2>
+    <svg id="linechart" ></svg>
+    <script src="../utils/linechart.js"></script>
+    <h2>Sales by Region</h2>
+    <svg id="barchart"></svg>
+    <script src="../utils/barchart.js"></script>
+
+    
+</body>
+</html>
