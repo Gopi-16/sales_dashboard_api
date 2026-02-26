@@ -2,29 +2,172 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=q, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Sales Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-body {
-    margin: 0;
-    padding: 40px;
-    background-color: #f4f6f9;
-}
-</style>
-</head>
-<body>
-    <button onClick="health()">Connection Check</button>
-    <p id="status" style="color: green;"></p>
-    <script src="../utils/health_check.js">
-    </script>
-    <h2> Sales over time </h2>
-    <svg id="linechart" ></svg>
-    <script src="../utils/linechart.js"></script>
-    <h2>Sales by Region</h2>
-    <svg id="barchart"></svg>
-    <script src="../utils/barchart.js"></script>
-
     
+    <style>
+        #filterby {
+            margin-right: 10px;
+        }
+        #filter {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        body {
+            margin: 0;
+            padding: 30px;
+            background-color: #f4f6f9;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            flex: 1 1 100%;
+        }
+
+        svg {
+            width: 100%;
+            height: 500px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="connection">
+    <button id="connect" onClick="health()">Connection Check</button>
+    <p id="connectionStatus" style="color: green;"></p>
+</div>
+<div class="top-bar">
+    <h1>Sales Dashboard</h1>
+    <label for="filter" id="filterby">Filter By: </label>
+    <select id="filter">
+        <option value="sales">Sales </option>
+        <option value="sale_date">Sales by Date</option>
+        
+        <option value="region">Sales by Region</option>
+        <option value="product_category">Sales by Product Category</option>
+    </select>
+        <input class="hidden" type="date" id="startDate">
+        <input class="hidden" type="date" id="endDate">
+</div>
+
+<div class="dashboard">
+    <div class="chart-container hidden" id="salesContainer">
+        <h2>Sales Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Id</th>
+                    <th>Product Category</th>
+                    <th>Quantity Sold</th>
+                    <th>Sale Date</th>
+                    <th>Region</th>
+                </tr>
+            </thead>
+            <tbody id="salesTableBody">
+            </tbody>
+        </table>
+    </div>
+    <div class="chart-container hidden" id="lineContainer">
+        <h2>Sales Over Time</h2>
+        <svg id="linechart"></svg>
+    </div>
+
+    <div class="chart-container hidden" id="barContainer">
+        <h2>Sales By Region</h2>
+        <svg id="barchart"></svg>
+    </div>
+</div>
+    <script src="../utils/linechart.js"></script>
+    <script src="../utils/barchart.js"></script>
+    <script src="../utils/sales_data.js"></script>
+    <script src="../utils/health_check.js"></script>
+    <script src="../utils/productCategory.js"></script>
+<script>
+    const filter = document.getElementById("filter");
+    filter.addEventListener("change",function(){
+        handleFilterChange(this.value);
+    });
+    function handleFilterChange(value){
+        if(value=="sale_date")
+    {
+        document.getElementById("lineContainer").classList.remove("hidden");
+        document.getElementById("barContainer").classList.add("hidden");
+        document.getElementById("salesContainer").classList.add("hidden");
+        document.getElementById("startDate").classList.remove("hidden");
+        document.getElementById("endDate").classList.remove("hidden");
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+
+        startDateInput.addEventListener("change", tryFetchLineChart);
+        endDateInput.addEventListener("change", tryFetchLineChart);
+
+        function tryFetchLineChart() {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+
+            if (startDate && endDate) {
+                fetchLineChartData();
+            }
+}
+    }
+    else if (value=="product_category")
+    {
+        document.getElementById("lineContainer").classList.remove("hidden");
+        document.getElementById("barContainer").classList.add("hidden"); 
+        document.getElementById("salesContainer").classList.add("hidden");
+        fetchProductCategoryLineChart();
+    }
+    else if(value=="region")
+    {
+        document.getElementById("lineContainer").classList.add("hidden");
+        document.getElementById("barContainer").classList.remove("hidden"); 
+        document.getElementById("salesContainer").classList.add("hidden");
+        fetchBarChartData();
+    }
+    else if (value=="sales")
+    {
+        document.getElementById("lineContainer").classList.add("hidden");
+        document.getElementById("barContainer").classList.add("hidden"); 
+        document.getElementById("salesContainer").classList.remove("hidden");
+        fetchSalesData();
+    }
+    }
+    
+   
+    </script>
+
 </body>
 </html>
