@@ -5,9 +5,7 @@ import uuid
 from storage.memory_storage import data_store
 
 async def preprocess_controller(file: UploadFile=File(...)):
-    # Implement your preprocessing logic here
-    # For example, you can read the uploaded file, perform data cleaning, and return the processed data
-    # return {"message": "Preprocessing completed successfully!"} 
+     
     try:
         contents= await file.read()
         df = pd.read_csv(io.StringIO(contents.decode("utf-8")))
