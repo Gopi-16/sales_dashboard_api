@@ -8,8 +8,9 @@ function fetchBarChartData() {
             data.forEach(d => {
                 d.total_sales = +d.total_sales;
             });
-
             const svg = d3.select("#barchart");
+            svg.selectAll("*").remove();
+            //const svg = d3.select("#barchart");
             const width = svg.node().getBoundingClientRect().width;
             const height = svg.node().getBoundingClientRect().height;
 

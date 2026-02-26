@@ -1,82 +1,59 @@
-const API = "http://127.0.0.1:8000";
-const session_id = localStorage.getItem("session_id");
+const session = localStorage.getItem("session_id");
 
-function fetchProductCategoryLineChart() {
+function fetchProductCategoryBarChart() {
 
-    // Clear old chart
-    d3.select("#linechart").selectAll("*").remove();
+    const svg = d3.select("#barchart");
+    svg.selectAll("*").remove();
 
-    fetch(`${API}/sales/aggregate?session_id=${session_id}&group_by=product_category`)
+    fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${session}&group_by=product_category`)
         .then(res => res.json())
         .then(data => {
 
-            if (!data || data.length === 0) {
-                console.log("No data returned");
-                return;
-            }
+            console.log("DATA:", data);
 
-            // Convert numeric values
             data.forEach(d => {
                 d.total_sales = +d.total_sales;
             });
 
-            const svg = d3.select("#linechart");
-            const margin = { top: 20, right: 30, bottom: 60, left: 60 };
+            const svgWidth = 600;
+            const svgHeight = 500;
 
-            const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
-            const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
+            svg.attr("width", svgWidth)
+               .attr("height", svgHeight);
+
+            const margin = { top: 20, right: 30, bottom: 60, left: 80 };
+            const width = svgWidth - margin.left - margin.right;
+            const height = svgHeight - margin.top - margin.bottom;
 
             const g = svg.append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            // X scale (CATEGORICAL)
-            const x = d3.scalePoint()
+            const x = d3.scaleBand()
                 .domain(data.map(d => d.key))
                 .range([0, width])
-                .padding(0.5);
+                .padding(0.3);
 
-            // Y scale (NUMERIC)
             const y = d3.scaleLinear()
                 .domain([0, d3.max(data, d => d.total_sales)])
-                .nice()
                 .range([height, 0]);
 
-            // X Axis
             g.append("g")
                 .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x))
-                .selectAll("text")
-                .attr("transform", "rotate(-30)")
-                .style("text-anchor", "end");
+                .call(d3.axisBottom(x));
 
-            // Y Axis
             g.append("g")
                 .call(d3.axisLeft(y));
 
-            // Line generator
-            const line = d3.line()
-                .x(d => x(d.key))
-                .y(d => y(d.total_sales));
-
-            // Draw line
-            g.append("path")
-                .datum(data)
-                .attr("fill", "none")
-                .attr("stroke", "steelblue")
-                .attr("stroke-width", 2)
-                .attr("d", line);
-
-            // Add dots
-            g.selectAll("circle")
+            g.selectAll("rect")
                 .data(data)
                 .enter()
-                .append("circle")
-                .attr("cx", d => x(d.key))
-                .attr("cy", d => y(d.total_sales))
-                .attr("r", 4)
+                .append("rect")
+                .attr("x", d => x(d.key))
+                .attr("y", d => y(d.total_sales))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d.total_sales))
                 .attr("fill", "steelblue");
+
         })
-        .catch(error => {
-            console.error("Error fetching product category data:", error);
-        });
+        .catch(err => console.error(err));
 }

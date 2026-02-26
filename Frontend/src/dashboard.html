@@ -109,6 +109,7 @@
         <h2>Sales By Region</h2>
         <svg id="barchart"></svg>
     </div>
+    
 </div>
     <script src="../utils/linechart.js"></script>
     <script src="../utils/barchart.js"></script>
@@ -145,10 +146,11 @@
     }
     else if (value=="product_category")
     {
-        document.getElementById("lineContainer").classList.remove("hidden");
-        document.getElementById("barContainer").classList.add("hidden"); 
+        document.getElementById("lineContainer").classList.add("hidden");
+        document.getElementById("barContainer").classList.remove("hidden"); 
         document.getElementById("salesContainer").classList.add("hidden");
-        fetchProductCategoryLineChart();
+        fetchProductCategoryBarChart();
+        
     }
     else if(value=="region")
     {
