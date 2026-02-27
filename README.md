@@ -96,6 +96,8 @@ Project/
 │   └── upload.js
 
 └── .gitignore
+
+└── requirements.txt
 ```
 
 
