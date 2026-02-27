@@ -1,16 +1,13 @@
 const session = localStorage.getItem("session_id");
 
-function fetchProductCategoryBarChart() {
+async function fetchProductCategoryBarChart() {
 
     const svg = d3.select("#barchart");
     svg.selectAll("*").remove();
 
-    fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${session}&group_by=product_category`)
-        .then(res => res.json())
-        .then(data => {
-
-            console.log("DATA:", data);
-
+    try {
+            const response = await fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${session}&group_by=product_category`);
+            const data = await response.json();
             data.forEach(d => {
                 d.total_sales = +d.total_sales;
             });
@@ -54,6 +51,10 @@ function fetchProductCategoryBarChart() {
                 .attr("height", d => height - y(d.total_sales))
                 .attr("fill", "steelblue");
 
-        })
-        .catch(err => console.error(err));
+        } catch (err) {
+            console.error(err);
+        }
+        
 }
+
+fetchProductCategoryBarChart();

@@ -1,16 +1,16 @@
 const API="http://127.0.0.1:8000";
 const session_id = localStorage.getItem("session_id");
-function fetchLineChartData() {
+async function fetchLineChartData() {
     const startDateInput = document.getElementById("startDate");
     const endDateInput = document.getElementById("endDate");
     const startDate = startDateInput.value;
     const endDate = endDateInput.value;
-    fetch(`${API}/sales/aggregate?session_id=${session_id}&group_by=sale_date&start_date=${startDate}&end_date=${endDate}`)
-        .then(res=>res.json())
-        .then(data=>{
-            data.forEach(d=>{
-                d.key=new Date(d.key);
-                d.total_sales=+d.total_sales;
+    try {
+        const response = await fetch(`${API}/sales/aggregate?session_id=${session_id}&group_by=sale_date&start_date=${startDate}&end_date=${endDate}`);
+        const data = await response.json();
+        data.forEach(d=>{
+            d.key=new Date(d.key);
+            d.total_sales=+d.total_sales;
             });
             const svg=d3.select ("#linechart");
             const margin ={top:1,right:2,bottom:20,left:50};
@@ -43,6 +43,9 @@ function fetchLineChartData() {
                 .attr("stroke","steelblue")
                 .attr("stroke-width",2)
                 .attr("d",line);
-        });
+        }
+        catch(err){
+            console.error(err);
+        }
 }
 fetchLineChartData();

@@ -1,13 +1,12 @@
 //const API = "http://127.0.0.1:8000";
 const id = localStorage.getItem("session_id");
-function fetchBarChartData() {
-    fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${id}&group_by=region`)
-        .then(res => res.json())
-        .then(data => {
-
+async function fetchBarChartData() {
+    try{
+            const response= await fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${id}&group_by=region`)
+            const data = await response.json();
             data.forEach(d => {
                 d.total_sales = +d.total_sales;
-            });
+            
             const svg = d3.select("#barchart");
             svg.selectAll("*").remove();
             //const svg = d3.select("#barchart");
@@ -47,6 +46,9 @@ function fetchBarChartData() {
                 .attr("width", x.bandwidth())
                 .attr("height", d => innerHeight - y(d.total_sales))
                 .attr("fill", "#4e73df");
-        });
-    }
+        });}
+    catch(err){
+        console.error(err); 
+
+    }}
 fetchBarChartData();

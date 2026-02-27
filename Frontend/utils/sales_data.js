@@ -1,12 +1,12 @@
 const sessionId = localStorage.getItem("session_id");
 
-function fetchSalesData() {
-    fetch(`http://127.0.0.1:8000/sales?session_id=${sessionId}`)
-        .then(res => res.json())
-        .then(data => {
-            const tableBody = document.getElementById("salesTableBody");
-            console.log("Fetched sales data:", data);
-            tableBody.innerHTML = "";
+async function fetchSalesData() {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/sales?session_id=${sessionId}`);
+        const data = await response.json();
+        const tableBody = document.getElementById("salesTableBody");
+        console.log("Fetched sales data:", data);
+        tableBody.innerHTML = "";
             data.forEach(sale => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -18,5 +18,8 @@ function fetchSalesData() {
                 `;
                 tableBody.appendChild(row);
             });
-        });
+        } catch (error) {
+            console.error("Error fetching sales data:", error);
+        }
 }
+fetchSalesData();
