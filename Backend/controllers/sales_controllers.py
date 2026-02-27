@@ -6,6 +6,9 @@ def aggregate_sales(session_id: str, group_by: str, start_date=None, end_date=No
 
     if session_id not in data_store:
         raise HTTPException(status_code=404, detail="Invalid session_id")
+    
+    # Retrieve the preprocessed DataFrame from memory storage using session_id
+
 
     df = data_store[session_id].copy()
 
@@ -14,7 +17,7 @@ def aggregate_sales(session_id: str, group_by: str, start_date=None, end_date=No
             status_code=400,
             detail=f"Column '{group_by}' not found"
         )
-
+    # Check if 'quantity_sold' column exists in the DataFrame
     if "quantity_sold" not in df.columns:
         raise HTTPException(
             status_code=400,
@@ -28,6 +31,8 @@ def aggregate_sales(session_id: str, group_by: str, start_date=None, end_date=No
             (df["sale_date"] <= pd.to_datetime(end_date))
         ]
 
+        
+    # Perform aggregation based on the specified group_by column and return the result
     result = (
         df.groupby(group_by)["quantity_sold"]
         .sum()

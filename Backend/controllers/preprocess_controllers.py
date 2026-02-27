@@ -7,6 +7,7 @@ from storage.memory_storage import data_store
 async def preprocess_controller(file: UploadFile=File(...)):
      
     try:
+        # Read the uploaded CSV file and preprocess the data
         contents= await file.read()
         df = pd.read_csv(io.StringIO(contents.decode("utf-8")))
         df.columns = (
@@ -22,9 +23,12 @@ async def preprocess_controller(file: UploadFile=File(...)):
         df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].median())
 
         
-
+        # Generating session ID and storing preprocessed data in memory storage for later retrieval
         session_id=str(uuid.uuid4())
         data_store[session_id]=df
+        
+        #retruning response consists of null counts and session id
+
 
         return {"message": "Preprocessing completed successfully!", "null_counts": null_counts, "session_id": session_id}
     except Exception as e:

@@ -6,6 +6,10 @@ async function fetchLineChartData() {
     const startDate = startDateInput.value;
     const endDate = endDateInput.value;
     try {
+
+        // Line chart visualization code calling sale aggregate by date API with date range filter 
+
+
         const response = await fetch(`${API}/sales/aggregate?session_id=${session_id}&group_by=sale_date&start_date=${startDate}&end_date=${endDate}`);
         const data = await response.json();
         data.forEach(d=>{
@@ -18,6 +22,9 @@ async function fetchLineChartData() {
             const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
             
             const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+            // Define scales and axes for linechart based on date and total sales data
+
             const x=d3.scaleTime()
                 .domain(d3.extent(data,d=>d.key))
                 .range([0,width]);

@@ -19,6 +19,7 @@ async function uploadFile() {
     formData.append('file', file);
 
     try {
+        // Upload the file to the backend API and handle the response to get session ID and redirect to dashboard
         const response = await fetch('http://127.0.0.1:8000/preprocess', {
             method: 'POST',
             body: formData
@@ -30,7 +31,7 @@ async function uploadFile() {
             localStorage.setItem('session_id', data.session_id);
             console.log('Session ID:', data.session_id);
             message.textContent= `File uploaded successfully. Redirecting to dashboard... Session ID: ${data.session_id}`;
-            window.location.href = 'dashboard.html';
+            window.location.href = 'dashboard.html';    // Redirect to dashboard after successful upload
         } else {
             message.textContent = "Upload failed.";
         }

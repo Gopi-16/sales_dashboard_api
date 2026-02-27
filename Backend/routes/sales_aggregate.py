@@ -3,6 +3,8 @@ from typing import Optional
 from controllers.sales_controllers import aggregate_sales
 router=APIRouter(prefix="/sales",tags=["sales"])
 
+# Endpoint to aggregate sales data based on specified parameters such date, product, or region
+
 @router.get("/aggregate")
 async def aggregate(
     session_id: str = Query(...),

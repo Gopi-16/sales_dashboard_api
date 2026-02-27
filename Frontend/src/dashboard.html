@@ -71,6 +71,8 @@
 </div>
 <div class="top-bar">
     <h1>Sales Dashboard</h1>
+    <!-- Filter options -->
+
     <label for="filter" id="filterby">Filter By: </label>
     <select id="filter">
         <option value="sales">Sales </option>
@@ -82,7 +84,7 @@
         <input class="hidden" type="date" id="startDate">
         <input class="hidden" type="date" id="endDate">
 </div>
-
+<!-- Sales Data Table Hidden-->
 <div class="dashboard">
     <div class="chart-container hidden" id="salesContainer">
         <h2>Sales Data</h2>
@@ -109,7 +111,7 @@
         <h2>Sales By Region</h2>
         <svg id="barchart"></svg>
     </div>
-    
+
 </div>
     <script src="../utils/linechart.js"></script>
     <script src="../utils/barchart.js"></script>
@@ -117,6 +119,10 @@
     <script src="../utils/health_check.js"></script>
     <script src="../utils/productCategory.js"></script>
 <script>
+
+    //Handling the Filter change here
+
+    
     const filter = document.getElementById("filter");
     filter.addEventListener("change",function(){
         handleFilterChange(this.value);

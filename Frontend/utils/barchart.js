@@ -2,6 +2,8 @@
 const id = localStorage.getItem("session_id");
 async function fetchBarChartData() {
     try{
+            // Bar chart visualization code calling sale aggregate by region API
+
             const response= await fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${id}&group_by=region`)
             const data = await response.json();
             data.forEach(d => {
@@ -9,7 +11,7 @@ async function fetchBarChartData() {
             
             const svg = d3.select("#barchart");
             svg.selectAll("*").remove();
-            //const svg = d3.select("#barchart");
+            
             const width = svg.node().getBoundingClientRect().width;
             const height = svg.node().getBoundingClientRect().height;
 

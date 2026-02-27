@@ -5,7 +5,9 @@ async function fetchProductCategoryBarChart() {
     const svg = d3.select("#barchart");
     svg.selectAll("*").remove();
 
-    try {
+    try {   
+            // Bar chart visualization code calling sale aggregate by product category API
+
             const response = await fetch(`http://127.0.0.1:8000/sales/aggregate?session_id=${session}&group_by=product_category`);
             const data = await response.json();
             data.forEach(d => {
@@ -25,6 +27,8 @@ async function fetchProductCategoryBarChart() {
             const g = svg.append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
+            // Define scales and axes for bar chart based on product category and total sales data
+                    
             const x = d3.scaleBand()
                 .domain(data.map(d => d.key))
                 .range([0, width])
